@@ -16,8 +16,10 @@
 <body>
 <div>
   <h2>Local push</h2>
+
   <!-- schedule -->
   <h4 class="section">〜 Schedule 〜</h4>
+
   <div class="container">
     <button class="button button--outline" onclick="schedule()">Once</button>
     <!-- <button class="button button--outline" onclick="scheduleMinutely()">5sec</button> -->
@@ -36,7 +38,7 @@ document.addEventListener ("deviceready", onDeviceReady, false);
 
 function onDeviceReady () {
       // window.alert ("ready!!");
-
+            
   //NCMB初期化
   application_key ="0db0b9debee15227aae65d6a39947d33869337fd58fb6c45bffb584b9f364f11";
   client_key ="3c7f5b271db27ce490971a36dea5880bcb62abd29f0eb9522af495be06ab252f";
@@ -44,7 +46,7 @@ function onDeviceReady () {
 
   ScheduleClass = NCMB.Object.extend("ScheduleClass");
   query = new NCMB.Query(ScheduleClass);
-  // ncmb = new NCMB(application_key, client_key);  // ver2
+  // ncmb = new NCMB(application_key, client_key);
   // ScheduleClass = ncmb.DataStore("ScheduleClass");
   // query = new ScheduleClass();
 
@@ -58,32 +60,51 @@ function onDeviceReady () {
   // window.alert(UserId); // ok
 }
 var id = 1;
-// var schedulelist = [];
-
+  work = [];
   //Webから取得
-  schedulesitei = function () {
+  schedulesitei = function () {    
     // window.alert(UserId); // ok
+    
     query.equalTo("UserId", UserId)
           .ascending("notifyDate")
-          // .descending("notifyDate")
+          // .descending("notifyDate")          
           .find()
           .then(function(results) {
             // window.alert(JSON.stringify(results));
             var ans = results[results.length - 1];
             // window.alert("ansの中身:" + JSON.stringify(ans));  //ok
             bingo = ans.get("notifyDate");
-            window.alert("bingoの中身:" + JSON.stringify(bingo)); //Datestoreの-9時間で取得してくるけど通知はNCMBの時間
+            window.alert("bingoの中身:" + bingo.toISOString()); //Datestoreの-9時間で取得してくるけど通知はNCMBの時間
             bingo = new Date(bingo);
+            for(var i = 0; i < results.length; i++){
+              work[i] = results[i].get("notifyDate"); 
+            }
+            
+            // nowより未来のみ取得
+            $(function() {
+              var yet = [];
+              now = new Date();
+              for(var i = 0; i < work.length; i++){
+                if(now < work[i]){
+                  yet.push(work[i]);
+                  // window.alert("yetだよ" + yet.toISOString());
+                }
+              }
+            });
+            // 
+            // yetを並び替えて一番小さいものを通知する
+            
 
             cordova.plugins.notification.local.schedule(
             {
               id: 1,
               text: "Webbbb",
-              at: bingo,
+              at: yet[0],
               sound: null
             });
           })
   };
+
 
   //schedule
   //今通知
