@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="spin.min.js"></script>
+    <script src="ncmb-latest.min.js"></script>
+    <script src="form2.js"></script>
+</head>
+<body>
+    <dic id="spin" />
+    <div id="form">
+        <form>
+            <label htmlFor="nameForm">user:</label>
+            <input id="nameForm"type="text" />
+            <label htmlFor="passwordForm">password:</label>
+            <input id="passwordForm"type="password" />
+        </form>
+        <div id="submitButton">
+            <button onClick="user.checkName()">signup</button>
+            <button onClick="user.submitSignIn()">signin</button>
+        </div>
+    </div>
+    <script src="config.js"></script>
+</body>
+</html>
